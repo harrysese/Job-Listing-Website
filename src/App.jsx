@@ -1,18 +1,19 @@
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import ViewAllJobs from "./components/ViewAllJobs";
+import Homecards from "./components/Homecards";
+import JobListings from "./components/JobListings";
 const App = () => {
-  const name1 = "John";
-  const names = ['David', 'John', 'Samuel', 'Phillip'];
-  const loggedIn=true
+
   return (
     <>
-      <div className="bg-black text-white">App</div>
-      <p>Hello {name1}</p>
-      <ul>
-        {names.map((name, index) => (
-          <li key={index}>{name}</li>  
-        ))}
-      </ul>
-      {loggedIn?<h1>Welcome Member</h1>:<h1>Welcome Guest</h1>}
+    <Navbar/>
+    <Hero title={"React Dev"} subtitle={"Find a react job"}/>
+    <Homecards/>
+    <JobListings/>
+    <ViewAllJobs/>
     </>
+      
   );
 };
 
