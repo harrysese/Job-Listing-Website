@@ -41,9 +41,7 @@ const JobListings = ({isHome=false}) => {
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
 
            { jobsToDisplay.map((job)=>(
-            <Link to={`/jobs/${job.id}`} key={job.id}>
              <JobListing key={job.id} job={job}/>
-             </Link>
           ))}
         </div>
           )}
