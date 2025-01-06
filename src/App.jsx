@@ -64,6 +64,28 @@ const createAccount = async (newaccount) => {
     return { success: false, message: error.message };
   }
 };
+const Login = async (newaccount) => {
+  try {
+    const response = await fetch("/api/v1/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newaccount),
+      credentials: "include", // Include cookies in the request
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Invalid Credentials");
+    }
+
+    const data = await response.json();
+    return { success: true, message: data.message || "Login successful!" };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+};
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -74,7 +96,7 @@ const router = createBrowserRouter(
       <Route path="jobs/:id" element={<JobPage deleteJob={deleteJob} />} />
       <Route path="*" element={<NotFoundPage />} />
       <Route path="addjobs" element={<Addjobs addJobSubmit={addJob} />} />
-      <Route path="login" element={<LoginPage/>} />
+      <Route path="login" element={<LoginPage Login={Login}/>} />
       <Route path="signup" element={<SignupPage createAccount={createAccount}/>} />
     </Route>
   )

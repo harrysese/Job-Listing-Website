@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 const AddJobPage = ({ addJobSubmit }) => {
   const [title, setTitle] = useState("");
   const [type, setType] = useState("Full-Time");
@@ -15,7 +16,7 @@ const AddJobPage = ({ addJobSubmit }) => {
 
   const navigate = useNavigate();
 
-  const submitForm = (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
 
     const newJob = {
@@ -24,19 +25,39 @@ const AddJobPage = ({ addJobSubmit }) => {
       location,
       description,
       salary,
-     companyname,
-        companydescription,
-        company_contactemail,
-        company_contactphone,
-      
+      companyname,
+      companydescription,
+      company_contactemail,
+      company_contactphone,
     };
 
-    addJobSubmit(newJob);
+    try {
+      await addJobSubmit(newJob);
+      toast.success("Job Added Successfully", {
+        autoClose: 6000,
+        onClose: () => navigate("/jobs"),
+      });
 
-    toast.success("Job Added Successfully", {
-      autoClose: 6000,
-    });
+      // Reset form fields
+      setTitle("");
+      setType("Full-Time");
+      setLocation("");
+      setDescription("");
+      setSalary("Under $50K");
+      setCompanyName("");
+      setCompanyDescription("");
+      setContactEmail("");
+      setContactPhone("");
+    } catch (error) {
+      toast.error("Failed to add job. Please try again.");
+    }
   };
+
+  const isFormValid =
+    title &&
+    location &&
+    description &&
+    company_contactemail.includes("@");
 
   return (
     <section className="bg-indigo-50">
@@ -68,20 +89,22 @@ const AddJobPage = ({ addJobSubmit }) => {
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700 font-bold mb-2">
+              <label htmlFor="title" className="block text-gray-700 font-bold mb-2">
                 Job Listing Name
               </label>
               <input
                 type="text"
                 id="title"
                 name="title"
+                aria-label="Job Title"
                 className="border rounded w-full py-2 px-3 mb-2"
-                placeholder="eg. Beautiful Apartment In Miami"
+                placeholder="e.g., Software Engineer"
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
             </div>
+
             <div className="mb-4">
               <label
                 htmlFor="description"
@@ -92,9 +115,11 @@ const AddJobPage = ({ addJobSubmit }) => {
               <textarea
                 id="description"
                 name="description"
+                aria-label="Job Description"
                 className="border rounded w-full py-2 px-3"
                 rows="4"
                 placeholder="Add any job duties, expectations, requirements, etc"
+                required
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               ></textarea>
@@ -102,7 +127,7 @@ const AddJobPage = ({ addJobSubmit }) => {
 
             <div className="mb-4">
               <label
-                htmlFor="type"
+                htmlFor="salary"
                 className="block text-gray-700 font-bold mb-2"
               >
                 Salary
@@ -130,13 +155,14 @@ const AddJobPage = ({ addJobSubmit }) => {
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700 font-bold mb-2">
+              <label htmlFor="location" className="block text-gray-700 font-bold mb-2">
                 Location
               </label>
               <input
                 type="text"
                 id="location"
                 name="location"
+                aria-label="Job Location"
                 className="border rounded w-full py-2 px-3 mb-2"
                 placeholder="Company Location"
                 required
@@ -158,6 +184,7 @@ const AddJobPage = ({ addJobSubmit }) => {
                 type="text"
                 id="company"
                 name="company"
+                aria-label="Company Name"
                 className="border rounded w-full py-2 px-3"
                 placeholder="Company Name"
                 value={companyname}
@@ -175,6 +202,7 @@ const AddJobPage = ({ addJobSubmit }) => {
               <textarea
                 id="company_description"
                 name="company_description"
+                aria-label="Company Description"
                 className="border rounded w-full py-2 px-3"
                 rows="4"
                 placeholder="What does your company do?"
@@ -194,6 +222,7 @@ const AddJobPage = ({ addJobSubmit }) => {
                 type="email"
                 id="contact_email"
                 name="contact_email"
+                aria-label="Contact Email"
                 className="border rounded w-full py-2 px-3"
                 placeholder="Email address for applicants"
                 required
@@ -201,6 +230,7 @@ const AddJobPage = ({ addJobSubmit }) => {
                 onChange={(e) => setContactEmail(e.target.value)}
               />
             </div>
+
             <div className="mb-4">
               <label
                 htmlFor="contact_phone"
@@ -212,6 +242,7 @@ const AddJobPage = ({ addJobSubmit }) => {
                 type="tel"
                 id="contact_phone"
                 name="contact_phone"
+                aria-label="Contact Phone"
                 className="border rounded w-full py-2 px-3"
                 placeholder="Optional phone for applicants"
                 value={company_contactphone}
@@ -223,6 +254,7 @@ const AddJobPage = ({ addJobSubmit }) => {
               <button
                 className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
                 type="submit"
+                disabled={!isFormValid} // Disable if form is invalid
               >
                 Add Job
               </button>
@@ -234,4 +266,5 @@ const AddJobPage = ({ addJobSubmit }) => {
     </section>
   );
 };
+
 export default AddJobPage;
