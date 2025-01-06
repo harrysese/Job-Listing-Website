@@ -43,6 +43,28 @@ const addJob = async (newJob) => {
   });
   return;
 };
+const createAccount = async (newaccount) => {
+  try {
+    const response = await fetch("/api/v1/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newaccount),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to create account. Username or email already exists");
+    }
+
+    const data = await response.json();
+    return { success: true, message: data.message || "Account created successfully!" };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+};
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<MainLayout />}>
@@ -53,7 +75,7 @@ const router = createBrowserRouter(
       <Route path="*" element={<NotFoundPage />} />
       <Route path="addjobs" element={<Addjobs addJobSubmit={addJob} />} />
       <Route path="login" element={<LoginPage/>} />
-      <Route path="signup" element={<SignupPage/>} />
+      <Route path="signup" element={<SignupPage createAccount={createAccount}/>} />
     </Route>
   )
 );

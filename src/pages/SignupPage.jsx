@@ -1,16 +1,44 @@
+import "react-toastify/dist/ReactToastify.css";
 import { useState } from "react";
-
-const SignupPage = () => {
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+const SignupPage = ({ createAccount }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
+  const [first_name, setFirstname] = useState("");
+  const [last_name, setLastname] = useState("");
+  const navigate = useNavigate();
+
+  const submitForm = async (e) => {
+    e.preventDefault();
+
+    const newaccount = {
+      username,
+      password,
+      email,
+      first_name,
+      last_name,
+    };
+
+    const result = await createAccount(newaccount);
+
+    if (result.success) {
+      toast.success(result.message, {
+        autoClose: 6000,
+      });
+      navigate("/login"); // Redirect to login page after success
+    } else {
+      toast.error(result.message, {
+        autoClose: 6000,
+      });
+    }
+  };
 
   return (
     <section className="min-h-screen bg-blue-50 flex items-center justify-center">
       <div className="bg-white shadow-lg rounded-lg max-w-lg w-full p-8">
-        <form>
+        <form onSubmit={submitForm}>
           <h2 className="text-center font-extrabold text-3xl text-indigo-600 mb-6">
             Sign Up
           </h2>
@@ -31,7 +59,7 @@ const SignupPage = () => {
               id="firstname"
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               placeholder="First Name"
-              value={firstname}
+              value={first_name}
               onChange={(e) => setFirstname(e.target.value)}
               required
             />
@@ -41,7 +69,7 @@ const SignupPage = () => {
               id="lastname"
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               placeholder="Last Name"
-              value={lastname}
+              value={last_name}
               onChange={(e) => setLastname(e.target.value)}
               required
             />
@@ -62,8 +90,8 @@ const SignupPage = () => {
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               placeholder="Password"
               value={password}
-              required
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
           <button
@@ -73,6 +101,7 @@ const SignupPage = () => {
             Sign Up
           </button>
         </form>
+        <ToastContainer />
       </div>
     </section>
   );
