@@ -1,19 +1,48 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const AddJobPage = ({ addJobSubmit }) => {
-  const [title, setTitle]=useState('');
-  const [type, setType]=useState('Full-time');
-  const [location, setLocation]=useState('');
-  const [description, setDescription]=useState('');
-  const [salary, setSalary]=useState('under $50K');
-  const [companyName, setCompanyName]=useState('')
-  const [companyDescription, setCompanyDescription]=useState('');
-  const [contactEmail, setContactEmail]=useState('');
-  const [contactPhone, setContactPhone]=useState('');
+  const [title, setTitle] = useState("");
+  const [type, setType] = useState("Full-Time");
+  const [location, setLocation] = useState("");
+  const [description, setDescription] = useState("");
+  const [salary, setSalary] = useState("Under $50K");
+  const [companyname, setCompanyName] = useState("");
+  const [companydescription, setCompanyDescription] = useState("");
+  const [company_contactemail, setContactEmail] = useState("");
+  const [company_contactphone, setContactPhone] = useState("");
+
+  const navigate = useNavigate();
+
+  const submitForm = (e) => {
+    e.preventDefault();
+
+    const newJob = {
+      title,
+      type,
+      location,
+      description,
+      salary,
+     companyname,
+        companydescription,
+        company_contactemail,
+        company_contactphone,
+      
+    };
+
+    addJobSubmit(newJob);
+
+    toast.success("Job Added Successfully", {
+      autoClose: 6000,
+    });
+  };
+
   return (
     <section className="bg-indigo-50">
       <div className="container m-auto max-w-2xl py-24">
         <div className="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0">
-          <form>
+          <form onSubmit={submitForm}>
             <h2 className="text-3xl text-center font-semibold mb-6">Add Job</h2>
 
             <div className="mb-4">
@@ -29,7 +58,7 @@ const AddJobPage = ({ addJobSubmit }) => {
                 className="border rounded w-full py-2 px-3"
                 required
                 value={type}
-                onChange={(e)=>setType(e.target.value)}
+                onChange={(e) => setType(e.target.value)}
               >
                 <option value="Full-Time">Full-Time</option>
                 <option value="Part-Time">Part-Time</option>
@@ -50,7 +79,7 @@ const AddJobPage = ({ addJobSubmit }) => {
                 placeholder="eg. Beautiful Apartment In Miami"
                 required
                 value={title}
-                onChange={(e)=>setTitle(e.target.value)}
+                onChange={(e) => setTitle(e.target.value)}
               />
             </div>
             <div className="mb-4">
@@ -67,7 +96,7 @@ const AddJobPage = ({ addJobSubmit }) => {
                 rows="4"
                 placeholder="Add any job duties, expectations, requirements, etc"
                 value={description}
-                onChange={(e)=>setDescription(e.target.value)}
+                onChange={(e) => setDescription(e.target.value)}
               ></textarea>
             </div>
 
@@ -81,10 +110,10 @@ const AddJobPage = ({ addJobSubmit }) => {
               <select
                 id="salary"
                 name="salary"
-                value={salary}
                 className="border rounded w-full py-2 px-3"
                 required
-                onChange={(e)=>setSalary(e.target.value)}
+                value={salary}
+                onChange={(e) => setSalary(e.target.value)}
               >
                 <option value="Under $50K">Under $50K</option>
                 <option value="$50K - 60K">$50K - $60K</option>
@@ -110,9 +139,9 @@ const AddJobPage = ({ addJobSubmit }) => {
                 name="location"
                 className="border rounded w-full py-2 px-3 mb-2"
                 placeholder="Company Location"
-                value={location}
-                onChange={(e)=>setLocation(e.target.value)}
                 required
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
               />
             </div>
 
@@ -131,8 +160,8 @@ const AddJobPage = ({ addJobSubmit }) => {
                 name="company"
                 className="border rounded w-full py-2 px-3"
                 placeholder="Company Name"
-                value={companyName}
-                onChange={(e)=>setCompanyName(e.target.value)}
+                value={companyname}
+                onChange={(e) => setCompanyName(e.target.value)}
               />
             </div>
 
@@ -149,8 +178,8 @@ const AddJobPage = ({ addJobSubmit }) => {
                 className="border rounded w-full py-2 px-3"
                 rows="4"
                 placeholder="What does your company do?"
-                value={companyDescription}
-                onChange={(e)=>setCompanyDescription(e.target.value)}
+                value={companydescription}
+                onChange={(e) => setCompanyDescription(e.target.value)}
               ></textarea>
             </div>
 
@@ -168,8 +197,8 @@ const AddJobPage = ({ addJobSubmit }) => {
                 className="border rounded w-full py-2 px-3"
                 placeholder="Email address for applicants"
                 required
-                value={contactEmail}
-                onChange={(e)=>setContactEmail(e.target.value)}
+                value={company_contactemail}
+                onChange={(e) => setContactEmail(e.target.value)}
               />
             </div>
             <div className="mb-4">
@@ -183,10 +212,10 @@ const AddJobPage = ({ addJobSubmit }) => {
                 type="tel"
                 id="contact_phone"
                 name="contact_phone"
-                value={contactPhone}
                 className="border rounded w-full py-2 px-3"
                 placeholder="Optional phone for applicants"
-                onChange={(e)=>setContactPhone(e.target.value)}
+                value={company_contactphone}
+                onChange={(e) => setContactPhone(e.target.value)}
               />
             </div>
 
@@ -199,10 +228,10 @@ const AddJobPage = ({ addJobSubmit }) => {
               </button>
             </div>
           </form>
+          <ToastContainer />
         </div>
       </div>
     </section>
   );
 };
-
 export default AddJobPage;

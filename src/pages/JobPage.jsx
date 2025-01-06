@@ -1,17 +1,27 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import { Link } from "react-router-dom";
 import { FaArrowLeft, FaMapMarker } from "react-icons/fa";
-const JobPage = () => {
+const JobPage = ({ deleteJob }) => {
   const { id } = useParams();
   const [job, setJob] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const onDelete = (jobId) => {
+    const confirm = window.confirm(
+      "Are you sure you want to delete this job? "
+    );
+    if (!confirm) return;
+    deleteJob(jobId);
+    navigate("/jobs");
+  };
   useEffect(() => {
     const fetchJob = async () => {
       try {
-        const res = await fetch(`/api/jobs/${id}`);
+        const res = await fetch(`/api/v1/jobs/${id}`);
         const data = await res.json();
+        console.log(data)
         setJob(data);
       } catch (error) {
         console.log(`Error fetching data: ${error}`);
@@ -72,35 +82,38 @@ const JobPage = () => {
                   <div className="bg-white p-6 rounded-lg shadow-md">
                     <h3 className="text-xl font-bold mb-6">Company Info</h3>
 
-                    <h2 className="text-2xl">{job.company.name}</h2>
+                    <h2 className="text-2xl">{job.companyname}</h2>
 
-                    <p className="my-2">{job.company.description}</p>
+                    <p className="my-2">{job.companydescription}</p>
 
                     <hr className="my-4" />
 
                     <h3 className="text-xl">Contact Email:</h3>
 
                     <p className="my-2 bg-indigo-100 p-2 font-bold">
-                      {job.company.contactEmail}
+                      {job.company_contactemail}
                     </p>
 
                     <h3 className="text-xl">Contact Phone:</h3>
 
                     <p className="my-2 bg-indigo-100 p-2 font-bold">
                       {" "}
-                      {job.company.contactPhone}
+                      {job.company_contactphone}
                     </p>
                   </div>
 
                   <div className="bg-white p-6 rounded-lg shadow-md mt-6">
                     <h3 className="text-xl font-bold mb-6">Manage Job</h3>
                     <Link
-                      to={`/edit-job/${job.id}`}
+                      to={`/editjob/${job.id}`}
                       className="bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
                     >
                       Edit Job
                     </Link>
-                    <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block">
+                    <button
+                      onClick={() => onDelete(job.id)}
+                      className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+                    >
                       Delete Job
                     </button>
                   </div>
