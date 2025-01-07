@@ -13,6 +13,7 @@ import Addjobs from "./pages/Addjobs";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage"
 import EditJobPage from "./pages/EditJobPage";
+import JobsLayout from "./layouts/JobsLayout";
 const deleteJob = async (jobId) => {
   await fetch(`/api/v1/jobs/${jobId}`, {
     method: "DELETE",
@@ -89,18 +90,23 @@ const Login = async (newaccount) => {
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<MainLayout />}>
-      <Route index element={<Home />} />
-      <Route path="jobs" element={<Jobspage />} />
-      <Route path="editjob/:id" element={<EditJobPage editJob={editJob}/>}/>
-      <Route path="jobs/:id" element={<JobPage deleteJob={deleteJob} />} />
-      <Route path="*" element={<NotFoundPage />} />
-      <Route path="addjobs" element={<Addjobs addJobSubmit={addJob} />} />
-      <Route path="login" element={<LoginPage Login={Login}/>} />
-      <Route path="signup" element={<SignupPage createAccount={createAccount}/>} />
-    </Route>
+    <>
+      <Route path="/" element={<MainLayout />}>
+        <Route index element={<Home />} />
+        <Route path="editjob/:id" element={<EditJobPage editJob={editJob} />} />
+        <Route path="jobs/:id" element={<JobPage deleteJob={deleteJob} />} />
+        <Route path="*" element={<NotFoundPage />} />
+        <Route path="addjobs" element={<Addjobs addJobSubmit={addJob} />} />
+        <Route path="login" element={<LoginPage Login={Login} />} />
+        <Route path="signup" element={<SignupPage createAccount={createAccount} />} />
+      </Route>
+      <Route path="jobs" element={<JobsLayout />} >
+        <Route index element={<Jobspage />} />
+      </Route>
+    </>
   )
 );
+
 const App = () => {
   return <RouterProvider router={router} />;
 };
